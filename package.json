@@ -1,0 +1,34 @@
+{
+  "name": "sudoku",
+  "version": "0.0.1",
+  "description": "Sudoku library in TypeScript.",
+  "main": "./dist/src/index.js",
+  "typings": "./dist/src/index.d.ts",
+  "typescript": {
+    "main": "./src/index.ts"
+  },
+  "scripts": {
+    "devtools": "npm install && typings install",
+    "tsc": "tsc",
+    "lint": "tslint -c tslint.json ./src/**/*.ts",
+    "test": "npm run tsc && mocha --reporter dot ./dist/**/*.spec.js",
+    "build": "npm run lint && npm run tsc",
+    "all": "npm run build && npm run test"
+  },
+  "author": "Marcus Bodin <bodinaren@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+	"btypescript": "file:..\\bTypeScript"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.1",
+    "browserify-umdify": "^1.0.3",
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5",
+    "tslint": "^3.12.1",
+    "typescript": "^1.8.10",
+    "typings": "^0.8.1",
+    "uglify-js": "^2.6.2",
+    "uglifyify": "^3.0.1"
+  }
+}
