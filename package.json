@@ -18,7 +18,7 @@
   "author": "Marcus Bodin <bodinaren@gmail.com>",
   "license": "MIT",
   "dependencies": {
-	"btypescript": "file:..\\bTypeScript"
+	"btypescript": "https://github.com/bodinaren/bTypeScript"
   },
   "devDependencies": {
     "browserify": "^13.0.1",
