@@ -9,4 +9,5 @@ __export(require("./gameModes"));
 __export(require("./group"));
 __export(require("./sudoku"));
 __export(require("./tile"));
+__export(require("./note"));
 //# sourceMappingURL=index.js.map

@@ -1,45 +1,54 @@
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
-// export interface INote {
-//     value: boolean;
-//     toggleValue(val?: boolean);
-//     toggleInvalid(val?: boolean);
-// }
+export interface INote {
+    val: boolean;
+    toggleValue(val?: boolean);
+    toggleInvalid(val?: boolean);
+}
 
-// /**
-//  * A tile of the Sudoku board.
-//  * Normally you'll not want to use the property setters, but use the functions or let `Sudoku` to do this for you.
-//  */
-// export class Tile<N extends INote> {
-//     private _raw: boolean = false;
-//     private _val: boolean = false;
-//     private _invalid: boolean = false;
+/**
+ * A note of the Sudoku board.
+ */
+export class Note extends BehaviorSubject<boolean> {
+    num: number;
 
-//     constructor(value: boolean, isInvalid: boolean) {
-//         this._raw = value;
-//         this._invalid = isInvalid;
-        
-//         this.update();
-//     }
+    protected _val: boolean = false;
+    protected _isInvalid: boolean = false;
 
-//     get value(): boolean {
-//         return this._val;
-//     }
+    constructor(num: number, value: boolean, isInvalid: boolean) {
+        super(value && !isInvalid);
 
-//     toggleValue(val?: boolean) {
-//         if (typeof val === "undefined") val = !this._val;
-//         this._raw = val;
-//     }
+        this.num = num;
+        this._val = value;
+        this._isInvalid = isInvalid;
+    }
 
-//     toggleInvalid(val?: boolean) {
-//         if (typeof val === "undefined") val = !this._invalid;
-//         this._invalid = val;
-//     }
+    get val(): boolean {
+        return (this._val && !this._isInvalid);
+    }
 
-//     private update() {
-//         if (!this._invalid) {
-//             this._val = this._raw;
-//         } else {
-//             this._val = false;
-//         }
-//     }
-// }
+    toggleValue(val?: boolean) {
+        if (typeof val === "undefined") val = !this._val;
+        if (this.value !== val) {
+            this._val = val;
+
+            if (!this._isInvalid) {
+                this.next();
+            }
+        }
+    }
+
+    toggleInvalid(val?: boolean) {
+        if (typeof val === "undefined") val = !this._isInvalid;
+        if (this._isInvalid !== val) {
+            this._isInvalid = val;
+
+            this.next();
+        }
+    }
+    
+    next() {
+        // console.log("note.next");
+        super.next(this.val);
+    }
+}

@@ -18,7 +18,7 @@ var Group = (function () {
             var s = 0;
             for (var _i = 0, _a = this.tiles; _i < _a.length; _i++) {
                 var tile = _a[_i];
-                s += tile.value;
+                s += tile.val;
             }
             return s;
         },

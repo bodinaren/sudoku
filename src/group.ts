@@ -36,7 +36,7 @@ export class Group<T extends ITile> {
     get sum(): number {
         let s = 0;
         for (let tile of this.tiles) {
-            s += tile.value;
+            s += tile.val;
         }
         return s;
     }

@@ -5,13 +5,14 @@ import {ITile} from "./tile";
 import {IGroup} from "./group";
 import {GameModes} from "./gameModes";
 import {Difficulties} from "./difficulties";
+import {INote} from "./note";
 
 /**
  * The base of a Sudoku game.
  * A Sudoku game consists of 81 tiles with values between 1-9 (or 0 for an empty tile).
  * When playing Killer Sudoku, it also contains a number of groups which is the base of the board.
  */
-export class Sudoku<T extends ITile, G extends IGroup> {
+export class Sudoku<T extends ITile, N extends INote, G extends IGroup> {
     /** The 81 tiles of the board. */
     tiles: T[] = [];
     /** The groups of the board. Only used in Killer Sudoku. */
@@ -19,16 +20,11 @@ export class Sudoku<T extends ITile, G extends IGroup> {
     /** The mode of the game. */
     mode: GameModes;
 
-    private tileType;
-    private groupType;
-
     constructor(
-        tileType: { new(id: number, value: number, blocked?: boolean, group?: G): T },
-        groupType: { new(id: number, value: number, tiles?: T[]): G }
-    ) {
-        this.tileType = tileType;
-        this.groupType = groupType;
-    }
+        private tileType: { new<N>(noteType: N, id: number, value: number, blocked?: boolean, group?: G): T },
+        private noteType: { new(num: number, value: boolean, isInvalid: boolean) },
+        private groupType: { new(id: number, value: number, tiles?: T[]): G }
+    ) { }
 
     /**
      * Shorthand for setupNormalSudoku and setupKillerSudoku
@@ -55,7 +51,7 @@ export class Sudoku<T extends ITile, G extends IGroup> {
         if (arr.length != 81) throw "Invalid board size";
 
         arr.forEach((val, idx) => {
-            this.tiles.push(new this.tileType(idx, val || 0, !!val));
+            this.tiles.push(new this.tileType(this.noteType, idx, val || 0, !!val));
         });
 
         this.updateInvalidNotes();
@@ -69,7 +65,7 @@ export class Sudoku<T extends ITile, G extends IGroup> {
         this.mode = GameModes.Killer;
 
         for (let i = 0; i < 81; i++) {
-            this.tiles.push(new this.tileType(i, 0, false));
+            this.tiles.push(new this.tileType(this.noteType, i, 0, false));
         }
 
         groups.forEach((group, idx) => {
@@ -107,9 +103,9 @@ export class Sudoku<T extends ITile, G extends IGroup> {
     setValue(tile: ITile, value: number): boolean {
         if (tile.blocked) return false;
 
-        if (tile.value == value)
-            tile.value = 0;
-        else tile.value = value;
+        if (tile.val == value)
+            tile.val = 0;
+        else tile.val = value;
 
         this.updateInvalidTiles();
         this.updateInvalidGroups();
@@ -225,7 +221,7 @@ export class Sudoku<T extends ITile, G extends IGroup> {
         return isBoardValid;
     }
 
-    /** 
+    /**
      * Update all the notes that are invalid based on values already set.
      * This will affect the result you get from `Tile.getNotes()`.
      */
@@ -233,15 +229,16 @@ export class Sudoku<T extends ITile, G extends IGroup> {
 
         let t1: ITile;
 
+        // this trigger all tiles (almost) to trigger an .next() event, can we be smarter about this?
         this.tiles.map(x => { x.clearInvalidNotes(); });
 
         for (let i = 0; i < this.tiles.length; i++) {
             t1 = this.tiles[i];
 
-            if (t1.value) {
-                this.getCross(t1).forEach(x => { x.setInvalidNote(t1.value, true); });
-                this.getRegion(t1).forEach(x => { x.setInvalidNote(t1.value, true); });
-                if (this.isKillerMode()) t1.group.tiles.forEach(x => { x.setInvalidNote(t1.value, true); });
+            if (t1.val) {
+                this.getCross(t1).forEach(x => { x.setInvalidNote(t1.val, true); });
+                this.getRegion(t1).forEach(x => { x.setInvalidNote(t1.val, true); });
+                if (this.isKillerMode()) t1.group.tiles.forEach(x => { x.setInvalidNote(t1.val, true); });
             }
         }
     }

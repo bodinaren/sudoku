@@ -5,3 +5,4 @@ export * from "./gameModes";
 export * from "./group";
 export * from "./sudoku";
 export * from "./tile";
+export * from "./note";

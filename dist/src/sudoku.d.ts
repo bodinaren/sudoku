@@ -1,22 +1,26 @@
 import { ITile } from "./tile";
 import { IGroup } from "./group";
 import { GameModes } from "./gameModes";
+import { INote } from "./note";
 /**
  * The base of a Sudoku game.
  * A Sudoku game consists of 81 tiles with values between 1-9 (or 0 for an empty tile).
  * When playing Killer Sudoku, it also contains a number of groups which is the base of the board.
  */
-export declare class Sudoku<T extends ITile, G extends IGroup> {
+export declare class Sudoku<T extends ITile, N extends INote, G extends IGroup> {
+    private tileType;
+    private noteType;
+    private groupType;
     /** The 81 tiles of the board. */
     tiles: T[];
     /** The groups of the board. Only used in Killer Sudoku. */
     groups: G[];
     /** The mode of the game. */
     mode: GameModes;
-    private tileType;
-    private groupType;
     constructor(tileType: {
-        new (id: number, value: number, blocked?: boolean, group?: G): T;
+        new <N>(noteType: N, id: number, value: number, blocked?: boolean, group?: G): T;
+    }, noteType: {
+        new (num: number, value: boolean, isInvalid: boolean);
     }, groupType: {
         new (id: number, value: number, tiles?: T[]): G;
     });

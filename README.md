@@ -7,18 +7,32 @@ This is just a quick peek to get you started. Check out the API docs for the ful
 
 ### Initialize a Sudoku game
 ```js
-let game = new Sudoku<Tile<IGroup>, Group<ITile>>(Tile, Group);
+let game = new Sudoku<Tile<IGroup>, Note, Group<ITile>>(Tile, Note, Group);
 ```
+
 While this might look overly complicated, it gives use great freedom to extend our tiles and group.
 For a `Tile` you might for example want to know if you have currently selected the tile. You may then extend the original `Tile` like so:
+
 ```js
-class CustomTile extends Tile<CustomGroup> {
+class CustomTile extends Tile<CustomGroup, CustomNote> {
     isActiveTile: boolean = false;
+}
+class CustomNote extends Note {
+    isHighlighted: boolean: false;
 }
 class CustomGroup extends Group<CustomTile> {
     isActiveGroup: boolean = false;
 }
-new Sudoku<CustomTile, CustomGroup>(CustomTile, CustomGroup);
+new Sudoku<CustomTile, CustomNote, CustomGroup>(CustomTile, CustomNote, CustomGroup);
+```
+
+And you can of course also mix and match as you wish, for example maybe you just wanna extends the Tile class:
+
+```js
+class CustomTile extends Tile<Group<Tile>, Note> {
+    isActiveTile: boolean = false;
+}
+new Sudoku<CustomTile, Note, Group<CustomTile>>(CustomTile, Note, Group);
 ```
 
 ### Setup a board
@@ -61,11 +75,7 @@ tile.getNotes(); // [true, false, false, false, true, false, false, false, true]
 
 tile.setInvalidNote(5, true);
 tile.getNotes(); // [true, false, false, false, false, false, false, false, true];
-tile.notes; // [true, false, false, false, true, false, false, false, true];
 ```
-Again, while it might be tempting to simply use `Tile.notes`, as you can see above `Tile.setInvalidNote` does not update the notes array.
-Instead it updates a private array which is then used to calculate which notes are actually valid when calling `Tile.getNotes()`.
-This let's us get the note back again in case the value of another tile is removed again making the note valid.
 
 *NOTE: You generally don't need to bother with `Tile.setInvalidNote`, using `Sudoku.setValue` will keep this updated for you. I just used it here to prove a point.*
 

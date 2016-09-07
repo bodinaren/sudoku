@@ -8,13 +8,14 @@ var gameModes_1 = require("./gameModes");
  * When playing Killer Sudoku, it also contains a number of groups which is the base of the board.
  */
 var Sudoku = (function () {
-    function Sudoku(tileType, groupType) {
+    function Sudoku(tileType, noteType, groupType) {
+        this.tileType = tileType;
+        this.noteType = noteType;
+        this.groupType = groupType;
         /** The 81 tiles of the board. */
         this.tiles = [];
         /** The groups of the board. Only used in Killer Sudoku. */
         this.groups = [];
-        this.tileType = tileType;
-        this.groupType = groupType;
     }
     /**
      * Shorthand for setupNormalSudoku and setupKillerSudoku
@@ -41,7 +42,7 @@ var Sudoku = (function () {
         if (arr.length != 81)
             throw "Invalid board size";
         arr.forEach(function (val, idx) {
-            _this.tiles.push(new _this.tileType(idx, val || 0, !!val));
+            _this.tiles.push(new _this.tileType(_this.noteType, idx, val || 0, !!val));
         });
         this.updateInvalidNotes();
         return this;
@@ -53,7 +54,7 @@ var Sudoku = (function () {
         var _this = this;
         this.mode = gameModes_1.GameModes.Killer;
         for (var i = 0; i < 81; i++) {
-            this.tiles.push(new this.tileType(i, 0, false));
+            this.tiles.push(new this.tileType(this.noteType, i, 0, false));
         }
         groups.forEach(function (group, idx) {
             var tiles = [], value = group[0];
@@ -82,10 +83,10 @@ var Sudoku = (function () {
     Sudoku.prototype.setValue = function (tile, value) {
         if (tile.blocked)
             return false;
-        if (tile.value == value)
-            tile.value = 0;
+        if (tile.val == value)
+            tile.val = 0;
         else
-            tile.value = value;
+            tile.val = value;
         this.updateInvalidTiles();
         this.updateInvalidGroups();
         this.updateInvalidNotes();
@@ -184,14 +185,15 @@ var Sudoku = (function () {
      */
     Sudoku.prototype.updateInvalidNotes = function () {
         var t1;
+        // this trigger all tiles (almost) to trigger an .next() event, can we be smarter about this?
         this.tiles.map(function (x) { x.clearInvalidNotes(); });
         for (var i = 0; i < this.tiles.length; i++) {
             t1 = this.tiles[i];
-            if (t1.value) {
-                this.getCross(t1).forEach(function (x) { x.setInvalidNote(t1.value, true); });
-                this.getRegion(t1).forEach(function (x) { x.setInvalidNote(t1.value, true); });
+            if (t1.val) {
+                this.getCross(t1).forEach(function (x) { x.setInvalidNote(t1.val, true); });
+                this.getRegion(t1).forEach(function (x) { x.setInvalidNote(t1.val, true); });
                 if (this.isKillerMode())
-                    t1.group.tiles.forEach(function (x) { x.setInvalidNote(t1.value, true); });
+                    t1.group.tiles.forEach(function (x) { x.setInvalidNote(t1.val, true); });
             }
         }
     };

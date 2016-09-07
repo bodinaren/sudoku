@@ -1,9 +1,10 @@
 import { IGroup } from "./group";
+import { INote } from "./note";
+import { BehaviorSubject } from "rxjs";
 export interface ITile {
     id: number;
-    value: number;
+    val: number;
     blocked: boolean;
-    notes: boolean[];
     group: IGroup;
     isInvalid: boolean;
     col: number;
@@ -17,29 +18,21 @@ export interface ITile {
     isEmpty(): boolean;
     clear(): any;
 }
-/**
- * A tile of the Sudoku board.
- * Normally you'll not want to use the property setters, but use the functions or let `Sudoku` to do this for you.
- */
-export declare class Tile<G extends IGroup> {
+export declare class Tile<G extends IGroup, N extends INote> extends BehaviorSubject<number> implements ITile {
+    private noteType;
     /** The ID of the cell, a number between 0 and 80 */
     id: number;
-    private _value;
+    protected _val: number;
     /** The number of the cell. 0 means empty. Cannot be updated if `blocked === true` */
-    value: number;
+    val: number;
     /**
      * Whether this cell had an initial value. Cells that are blocked shouldn't ever change value.
      */
     blocked: boolean;
-    /**
-     * Note: In most cases you should use `getNotes` and `toggleNote`.
-     * The notes that has been set on a 0-based index (e.g. `notes[0] === true` means a note for number 1 has been set).
-     */
-    notes: boolean[];
-    private _notes;
     /** Which group the cell belongs to. Only used in Killer Sudoku. */
     group: G;
     isInvalid: boolean;
+    notes: N[];
     private invalidNotes;
     /** Which column the tile belong to. */
     col: number;
@@ -47,7 +40,9 @@ export declare class Tile<G extends IGroup> {
     row: number;
     /** Which region the tile belong to. */
     region: number;
-    constructor(id: number, value: number, blocked?: boolean, group?: G);
+    constructor(noteType: {
+        new (num: number, value: boolean, isInvalid: boolean);
+    }, id: number, value: number, blocked?: boolean, group?: G);
     /**
      * Get which notes has been set in this cell, excluding the notes that has been set as invalid by setInvalidNote
      */
@@ -79,5 +74,5 @@ export declare class Tile<G extends IGroup> {
      * Clear the value, notes and invalid notes of this tile.
      */
     clear(): void;
-    private updateNotes();
+    next(val?: number): void;
 }
