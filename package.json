@@ -18,7 +18,8 @@
   "author": "Marcus Bodin <bodinaren@gmail.com>",
   "license": "MIT",
   "dependencies": {
-	  "btypescript": "https://github.com/bodinaren/bTypeScript"
+	  "btypescript": "https://github.com/bodinaren/bTypeScript",
+    "rxjs": "5.0.0-beta.6"
   },
   "devDependencies": {
     "browserify": "^13.0.1",
@@ -29,7 +30,6 @@
     "typescript": "^1.8.10",
     "typings": "^0.8.1",
     "uglify-js": "^2.6.2",
-    "uglifyify": "^3.0.1",
-    "rxjs": "5.0.0-beta.6"
+    "uglifyify": "^3.0.1"
   }
 }
