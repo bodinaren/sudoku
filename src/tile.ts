@@ -10,6 +10,7 @@ export interface ITile {
     blocked: boolean;
     group: IGroup;
     isInvalid: boolean;
+    notes: INote[]
     col: number;
     row: number;
     region: number;
