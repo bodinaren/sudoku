@@ -15,7 +15,7 @@ export interface ITile {
     row: number;
     region: number;
     getNotes(): boolean[];
-    toggleNote(num: number);
+    toggleNote(num: number, val?: boolean);
     setInvalidNote(num: number, isInvalid: boolean);
     clearInvalidNotes();
     equals(other: ITile): boolean;
