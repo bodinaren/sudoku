@@ -8,20 +8,20 @@ var rxjs_1 = require("rxjs");
 var Tile = (function (_super) {
     __extends(Tile, _super);
     function Tile(noteType, id, value, blocked, group) {
-        var _this = this;
         if (blocked === void 0) { blocked = false; }
-        _super.call(this, value);
-        this.noteType = noteType;
-        this.isInvalid = false;
-        this.id = id;
-        this.val = value;
-        this.blocked = blocked;
-        this.notes = Array.apply(undefined, Array(9)).map(function (x, idx) { return new _this.noteType(idx + 1, false, false); });
+        var _this = _super.call(this, value) || this;
+        _this.noteType = noteType;
+        _this.isInvalid = false;
+        _this.id = id;
+        _this.val = value;
+        _this.blocked = blocked;
+        _this.notes = Array.apply(undefined, Array(9)).map(function (x, idx) { return new _this.noteType(idx + 1, false, false); });
         // this._notes = Array.apply(undefined, Array(9)).map(Boolean); // init an array with length 9 with false as default values
-        this.invalidNotes = Array.apply(undefined, Array(9)).map(Boolean); // init an array with length 9 with false as default values
-        this.col = this.id % 9;
-        this.row = Math.floor(this.id / 9);
-        this.region = Math.floor(this.col / 3) + (this.row - this.row % 3);
+        _this.invalidNotes = Array.apply(undefined, Array(9)).map(Boolean); // init an array with length 9 with false as default values
+        _this.col = _this.id % 9;
+        _this.row = Math.floor(_this.id / 9);
+        _this.region = Math.floor(_this.col / 3) + (_this.row - _this.row % 3);
+        return _this;
     }
     Object.defineProperty(Tile.prototype, "val", {
         /** The number of the cell. 0 means empty. Cannot be updated if `blocked === true` */
@@ -41,7 +41,7 @@ var Tile = (function (_super) {
      * Get which notes has been set in this cell, excluding the notes that has been set as invalid by setInvalidNote
      */
     Tile.prototype.getNotes = function () {
-        return this.notes.map(function (x) { return x.val; });
+        return this.notes.map(function (x) { return x.value; });
         // return this._notes.map((val, idx) => val && !this.invalidNotes[idx]);
     };
     /**
@@ -58,7 +58,7 @@ var Tile = (function (_super) {
     /**
      * Set a note as invalid for this tile.
      * @param num {number} The value of the note that should be set
-     * @param isInvalid {boolean=true} If the cell should be set as invalid or not
+     * @param isInvalid {boolean=true} If the note should be set as invalid or not
      */
     Tile.prototype.setInvalidNote = function (num, isInvalid) {
         if (isInvalid === void 0) { isInvalid = true; }

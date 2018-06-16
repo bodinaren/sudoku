@@ -57,7 +57,7 @@ export declare class Tile<G extends IGroup, N extends INote> extends BehaviorSub
     /**
      * Set a note as invalid for this tile.
      * @param num {number} The value of the note that should be set
-     * @param isInvalid {boolean=true} If the cell should be set as invalid or not
+     * @param isInvalid {boolean=true} If the note should be set as invalid or not
      */
     setInvalidNote(num: number, isInvalid?: boolean): void;
     /**

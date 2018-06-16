@@ -1,7 +1,25 @@
-import { ITile } from "./tile";
-import { IGroup } from "./group";
-import { GameModes } from "./gameModes";
-import { INote } from "./note";
+import { ITile, Tile, INote, Note, IGroup, Group, GameModes } from "./";
+export interface ISudoku {
+    tiles: ITile[];
+    groups: IGroup[];
+    mode: GameModes;
+    setupSudoku(board: any, mode?: GameModes): this;
+    setupNormalSudoku(arr: number[]): this;
+    setupKillerSudoku(groups: number[][]): this;
+    getTileAt(idx: number): ITile;
+    setValue(tile: ITile, value: number): boolean;
+    isFinished(): boolean;
+    isSameRegion(tile1: ITile, tile2: ITile): boolean;
+    getRegion(tile: ITile): ITile[];
+    isSameCross(tile1: ITile, tile2: ITile): boolean;
+    getCross(tile: ITile): ITile[];
+    getTilesWithValue(num: number): ITile[];
+    isInvalid(tile1: ITile, tile2: ITile): boolean;
+    updateInvalidTiles(lazy?: boolean): boolean;
+    updateInvalidNotes(): void;
+    isNormalMode(): boolean;
+    isKillerMode(): boolean;
+}
 /**
  * The base of a Sudoku game.
  * A Sudoku game consists of 81 tiles with values between 1-9 (or 0 for an empty tile).
@@ -92,4 +110,10 @@ export declare class Sudoku<T extends ITile, N extends INote, G extends IGroup> 
     isNormalMode(): boolean;
     /** Check if the board is a Killer Sudoku */
     isKillerMode(): boolean;
+}
+/**
+ * This class simplify the usage of Sudoku, using the default Tile, Note and Group.
+ */
+export declare class DefaultSudoku extends Sudoku<Tile<IGroup, Note>, Note, Group<ITile>> {
+    constructor();
 }

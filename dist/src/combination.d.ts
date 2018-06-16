@@ -8,7 +8,7 @@ export declare class Combination {
     isStriked: boolean;
     constructor(numbers: number[]);
     /** The total sum of the combination */
-    sum: number;
+    readonly sum: number;
     /** The amount of numbers in the combination (short for `numbers.length`) */
-    count: number;
+    readonly count: number;
 }

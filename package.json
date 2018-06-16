@@ -11,25 +11,28 @@
     "devtools": "npm install && typings install",
     "tsc": "tsc",
     "lint": "tslint -c tslint.json ./src/**/*.ts",
-    "test": "npm run tsc && mocha --reporter dot ./dist/**/*.spec.js",
+    "mocha": "mocha --reporter dot ./dist/**/*.spec.js",
+    "istanbul": "istanbul cover node_modules/mocha/bin/_mocha dist/tests -- -R dot --recursive",
+    "test": "npm run tsc && npm run istanbul",
     "build": "npm run lint && npm run tsc",
-    "all": "npm run build && npm run test"
+    "all": "npm run lint && npm run tsc && npm run istanbul"
   },
   "author": "Marcus Bodin <bodinaren@gmail.com>",
   "license": "MIT",
   "dependencies": {
-	  "btypescript": "https://github.com/bodinaren/bTypeScript",
-    "rxjs": "5.0.0-beta.6"
+    "btypescript": "file:..\\bTypeScript",
+    "rxjs": "^6.2.1"
   },
   "devDependencies": {
-    "browserify": "^13.0.1",
+    "browserify": "^16.2.2",
     "browserify-umdify": "^1.0.3",
-    "chai": "^3.5.0",
-    "mocha": "^2.4.5",
-    "tslint": "^3.12.1",
-    "typescript": "^1.8.10",
-    "typings": "^0.8.1",
-    "uglify-js": "^2.6.2",
-    "uglifyify": "^3.0.1"
+    "chai": "^4.1.2",
+    "intern": "^4.2.0",
+    "mocha": "^5.2.0",
+    "remap-istanbul": "^0.11.1",
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.2",
+    "uglify-js": "^3.4.0",
+    "uglifyify": "^5.0.0"
   }
 }

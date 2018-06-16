@@ -1,7 +1,11 @@
 "use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var btypescript_1 = require("btypescript");
-var calculator_1 = require("./calculator");
-var gameModes_1 = require("./gameModes");
+var _1 = require("./");
 /**
  * The base of a Sudoku game.
  * A Sudoku game consists of 81 tiles with values between 1-9 (or 0 for an empty tile).
@@ -23,8 +27,8 @@ var Sudoku = (function () {
      * @see setupKillerSudoku
      */
     Sudoku.prototype.setupSudoku = function (board, mode) {
-        if (mode === void 0) { mode = gameModes_1.GameModes.Normal; }
-        if (mode === gameModes_1.GameModes.Killer) {
+        if (mode === void 0) { mode = _1.GameModes.Normal; }
+        if (mode === _1.GameModes.Killer) {
             this.setupKillerSudoku(board);
         }
         else {
@@ -38,7 +42,7 @@ var Sudoku = (function () {
      */
     Sudoku.prototype.setupNormalSudoku = function (arr) {
         var _this = this;
-        this.mode = gameModes_1.GameModes.Normal;
+        this.mode = _1.GameModes.Normal;
         if (arr.length != 81)
             throw "Invalid board size";
         arr.forEach(function (val, idx) {
@@ -52,7 +56,7 @@ var Sudoku = (function () {
      */
     Sudoku.prototype.setupKillerSudoku = function (groups) {
         var _this = this;
-        this.mode = gameModes_1.GameModes.Killer;
+        this.mode = _1.GameModes.Killer;
         for (var i = 0; i < 81; i++) {
             this.tiles.push(new this.tileType(this.noteType, i, 0, false));
         }
@@ -62,7 +66,7 @@ var Sudoku = (function () {
                 tiles.push(_this.tiles[group[i]]);
             }
             var g = new _this.groupType(idx, value, tiles);
-            g.combinations = calculator_1.Calculator.getPossibilities(g.value, g.tiles.length);
+            g.combinations = _1.Calculator.getPossibilities(g.value, g.tiles.length);
             _this.groups.push(g);
             tiles.forEach(function (x) { return x.group = g; });
         });
@@ -185,8 +189,8 @@ var Sudoku = (function () {
      */
     Sudoku.prototype.updateInvalidNotes = function () {
         var t1;
-        // this trigger all tiles (almost) to trigger an .next() event, can we be smarter about this?
-        this.tiles.map(function (x) { x.clearInvalidNotes(); });
+        // TODO: this trigger all tiles (almost) to trigger an .next() event, can we be smarter about this?
+        this.tiles.forEach(function (x) { x.clearInvalidNotes(); });
         for (var i = 0; i < this.tiles.length; i++) {
             t1 = this.tiles[i];
             if (t1.val) {
@@ -215,10 +219,21 @@ var Sudoku = (function () {
         });
     };
     /** Check if the board is a normal Sudoku */
-    Sudoku.prototype.isNormalMode = function () { return (this.mode === gameModes_1.GameModes.Normal); };
+    Sudoku.prototype.isNormalMode = function () { return (this.mode === _1.GameModes.Normal); };
     /** Check if the board is a Killer Sudoku */
-    Sudoku.prototype.isKillerMode = function () { return (this.mode === gameModes_1.GameModes.Killer); };
+    Sudoku.prototype.isKillerMode = function () { return (this.mode === _1.GameModes.Killer); };
     return Sudoku;
 }());
 exports.Sudoku = Sudoku;
+/**
+ * This class simplify the usage of Sudoku, using the default Tile, Note and Group.
+ */
+var DefaultSudoku = (function (_super) {
+    __extends(DefaultSudoku, _super);
+    function DefaultSudoku() {
+        return _super.call(this, _1.Tile, _1.Note, _1.Group) || this;
+    }
+    return DefaultSudoku;
+}(Sudoku));
+exports.DefaultSudoku = DefaultSudoku;
 //# sourceMappingURL=sudoku.js.map

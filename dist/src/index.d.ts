@@ -1,8 +1,7 @@
-export * from "./calculator";
-export * from "./combination";
-export * from "./difficulties";
-export * from "./gameModes";
-export * from "./group";
-export * from "./sudoku";
-export * from "./tile";
-export * from "./note";
+export { Calculator } from "./calculator";
+export { Combination } from "./combination";
+export { GameModes } from "./gameModes";
+export { ISudoku, Sudoku, DefaultSudoku } from "./sudoku";
+export { IGroup, Group } from "./group";
+export { ITile, Tile } from "./tile";
+export { INote, Note } from "./note";

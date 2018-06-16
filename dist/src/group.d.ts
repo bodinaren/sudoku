@@ -26,7 +26,7 @@ export declare class Group<T extends ITile> {
     /** If all the tiles are filled but the total value of the tiles doesn't add up to the expected sum. */
     isInvalid: boolean;
     /** The current sum of the tiles in the group. */
-    sum: number;
+    readonly sum: number;
     constructor(id: number, value: number, tiles?: T[]);
     /** Check if the tile is the first tile in the group (generally where you're expected to print the `value`) */
     isFirstInGroup(tile: T): boolean;
