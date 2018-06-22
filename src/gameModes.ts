@@ -1,6 +1,6 @@
 export enum GameModes {
-    Normal = 0,
-    Killer = 1,
-    Letter = 2,
-    Color = 3,
+  Normal = 0,
+  Killer = 1,
+  Letter = 2,
+  Color = 3,
 }

@@ -1,18 +1,20 @@
 {
-    "compileOnSave": true,
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "declaration": true,
-        "noImplicitAny": false,
-        "removeComments": false,
-        "preserveConstEnums": true,
-        "outDir": "./dist",
-        "sourceMap": true
-    },
-    "exclude": [
-        "node_modules",
-        "typings",
-        "dist"
-    ]
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "declaration": true,
+    "noImplicitAny": false,
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "outDir": "./dist",
+    "sourceMap": true,
+  },
+  "include": [
+    "src",
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests",
+  ],
 }

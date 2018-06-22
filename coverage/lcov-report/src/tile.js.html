@@ -22,22 +22,22 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>60/60</span>
+        <span class='fraction'>45/45</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">85.71% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>18/21</span>
+        <span class='fraction'>10/10</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>18/18</span>
+        <span class='fraction'>15/15</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>51/51</span>
+        <span class='fraction'>39/39</span>
       </div>
     </div>
   </div>
@@ -135,28 +135,7 @@
 90
 91
 92
-93
-94
-95
-96
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
+93</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
@@ -173,16 +152,14 @@
 <span class="cline-any cline-yes">11×</span>
 <span class="cline-any cline-yes">11×</span>
 <span class="cline-any cline-yes">11×</span>
-<span class="cline-any cline-yes">11×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">27×</span>
+<span class="cline-any cline-yes">11×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">15×</span>
-<span class="cline-any cline-yes">14×</span>
 <span class="cline-any cline-yes">14×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -246,43 +223,29 @@
 <span class="cline-any cline-yes">18×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16×</span>
-<span class="cline-any cline-yes">16×</span>
-<span class="cline-any cline-yes">16×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
-var __extends = (this &amp;&amp; this.__extends) || function (d, b) {
-    for (var p in b) <span class="missing-if-branch" title="else path not taken" >E</span>if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? <span class="branch-0 cbranch-no" title="branch not covered" >Object.create(b) </span>: (__.prototype = b.prototype, new __());
-};
-var rxjs_1 = require("rxjs");
-var Tile = (function (_super) {
-    __extends(Tile, _super);
-    function Tile(noteType, id, value, blocked, group) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var Tile = /** @class */ (function () {
+    function Tile(NOTE_TYPE, id, value, blocked, group) {
         if (blocked === void 0) { blocked = false; }
-        var _this = _super.call(this, value) || this;
-        _this.noteType = noteType;
-        _this.isInvalid = false;
-        _this.id = id;
-        _this.val = value;
-        _this.blocked = blocked;
-        _this.notes = Array.apply(undefined, Array(9)).map(function (x, idx) { return new _this.noteType(idx + 1, false, false); });
+        var _this = this;
+        this.NOTE_TYPE = NOTE_TYPE;
+        this.isInvalid = false;
+        this.id = id;
+        this.value = value;
+        this.blocked = blocked;
+        this.notes = Array.apply(undefined, Array(9)).map(function (x, idx) { return new _this.NOTE_TYPE(idx + 1, false, false); });
         // this._notes = Array.apply(undefined, Array(9)).map(Boolean); // init an array with length 9 with false as default values
-        _this.invalidNotes = Array.apply(undefined, Array(9)).map(Boolean); // init an array with length 9 with false as default values
-        _this.col = _this.id % 9;
-        _this.row = Math.floor(_this.id / 9);
-        _this.region = Math.floor(_this.col / 3) + (_this.row - _this.row % 3);
-        return _this;
+        this.invalidNotes = Array.apply(undefined, Array(9)).map(Boolean); // init an array with length 9 with false as default values
+        this.column = this.id % 9;
+        this.row = Math.floor(this.id / 9);
+        this.region = Math.floor(this.column / 3) + (this.row - this.row % 3);
     }
-    Object.defineProperty(Tile.prototype, "val", {
+    Object.defineProperty(Tile.prototype, "value", {
         /** The number of the cell. 0 means empty. Cannot be updated if `blocked === true` */
         get: function () {
             return this._val;
@@ -290,7 +253,6 @@ var Tile = (function (_super) {
         set: function (val) {
             if (!this.blocked &amp;&amp; this._val !== val) {
                 this._val = val;
-                this.next();
             }
         },
         enumerable: true,
@@ -300,7 +262,7 @@ var Tile = (function (_super) {
      * Get which notes has been set in this cell, excluding the notes that has been set as invalid by setInvalidNote
      */
     Tile.prototype.getNotes = function () {
-        return this.notes.map(function (x) { return x.val; });
+        return this.notes.map(function (x) { return x.value; });
         // return this._notes.map((val, idx) =&gt; val &amp;&amp; !this.invalidNotes[idx]);
     };
     /**
@@ -338,31 +300,24 @@ var Tile = (function (_super) {
      * @param other {Tile} The tile to compare with
      */
     Tile.prototype.equals = function (other) {
-        return this.val === other.val;
+        return this.value === other.value;
     };
     /** Check if the cell is empty (value === 0) */
     Tile.prototype.isEmpty = function () {
-        return this.val === 0;
+        return this.value === 0;
     };
     /**
      * Clear the value, notes and invalid notes of this tile.
      */
     Tile.prototype.clear = function () {
         if (!this.blocked)
-            this.val = 0;
+            this.value = 0;
         this.notes.forEach(function (x) { return x.toggleValue(false); });
         // this._notes = this._notes.map(() =&gt; false);
         this.clearInvalidNotes();
-        this.next();
-    };
-    Tile.prototype.next = function (val) {
-        // console.log("tile.next");
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (typeof val === "undefined")
-            val = this.val;
-        _super.prototype.next.call(this, val);
     };
     return Tile;
-}(rxjs_1.BehaviorSubject));
+}());
 exports.Tile = Tile;
 //# sourceMappingURL=tile.js.map</pre></td></tr>
 </table></pre>
@@ -370,7 +325,7 @@ exports.Tile = Tile;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun Jan 22 2017 21:36:24 GMT+0100 (W. Europe Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Jun 16 2018 20:04:07 GMT+0900 (Korea Standard Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

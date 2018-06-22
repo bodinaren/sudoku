@@ -1,33 +1,32 @@
-import {Group} from "../src/group";
-import {ITile, Tile} from "../src/tile";
-import {Note} from "../src/note";
-import {expect} from 'chai';
+import { Group } from "../src/group";
+import { ITile, Tile } from "../src/tile";
+import { Note } from "../src/note";
 
-describe("Group", function() {
-    it("isFirstInGroup", function() {
-        var tiles = [
-            new Tile(Note, 0, 0),
-            new Tile(Note, 1, 0)
-        ];
+describe("Group", () => {
+  it("isFirstInGroup", () => {
+    var tiles = [
+      new Tile(Note, 0, 0),
+      new Tile(Note, 1, 0)
+    ];
 
-        var group = new Group<ITile>(1, 10, tiles);
+    var group = new Group<ITile>(1, 10, tiles);
 
-        expect(group.isFirstInGroup(tiles[0])).to.eql(true);
-        expect(group.isFirstInGroup(tiles[1])).to.eql(false);
-    });
-    
-    it("sum", function() {
-        var tiles = [
-            new Tile(Note, 0, 4),
-            new Tile(Note, 1, 5)
-        ];
+    expect(group.isFirstInGroup(tiles[0])).toBe(true);
+    expect(group.isFirstInGroup(tiles[1])).toBe(false);
+  });
+  
+  it("sum", () => {
+    var tiles = [
+      new Tile(Note, 0, 4),
+      new Tile(Note, 1, 5)
+    ];
 
-        var group = new Group<ITile>(1, 10, tiles);
+    var group = new Group<ITile>(1, 10, tiles);
 
-        expect(group.sum).to.eql(9);
+    expect(group.sum).toBe(9);
 
-        tiles[1].value = 9;
+    tiles[1].value = 9;
 
-        expect(group.sum).to.eql(13);
-    });
+    expect(group.sum).toBe(13);
+  });
 });

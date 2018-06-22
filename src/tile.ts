@@ -1,8 +1,6 @@
 
-import {IGroup} from "./group";
-import {Note, INote} from "./note";
-import {List} from "btypescript";
-import {BehaviorSubject, Observable} from "rxjs";
+import { IGroup } from "./group";
+import { Note, INote } from "./note";
 
 export interface ITile {
   id: number;
@@ -23,7 +21,7 @@ export interface ITile {
   clear();
 }
 
-export class Tile<G extends IGroup, N extends INote> extends BehaviorSubject<number> implements ITile {
+export class Tile<N extends INote, G extends IGroup> implements ITile {
 
   /** The ID of the cell, a number between 0 and 80 */
   id: number;
@@ -36,12 +34,10 @@ export class Tile<G extends IGroup, N extends INote> extends BehaviorSubject<num
   set value(val: number) {
     if (!this.blocked && this._val !== val) {
       this._val = val;
-
-      this.next();
     }
   }
 
-  /** 
+  /**
    * Whether this cell had an initial value. Cells that are blocked shouldn't ever change value.
    */
   blocked: boolean;
@@ -63,18 +59,16 @@ export class Tile<G extends IGroup, N extends INote> extends BehaviorSubject<num
   region: number;
 
   constructor(
-    private noteType: { new(num: number, value: boolean, isInvalid: boolean) },
+    private NOTE_TYPE: { new(num: number, value: boolean, isInvalid: boolean): N },
     id: number,
     value: number,
     blocked: boolean = false,
     group?: G
   ) {
-    super(value);
-
     this.id = id;
     this.value = value;
     this.blocked = blocked;
-    this.notes = Array.apply(undefined, Array(9)).map((x, idx) => new this.noteType(idx + 1, false, false));
+    this.notes = Array.apply(undefined, Array(9)).map((x, idx) => new this.NOTE_TYPE(idx + 1, false, false));
     // this._notes = Array.apply(undefined, Array(9)).map(Boolean); // init an array with length 9 with false as default values
     this.invalidNotes = Array.apply(undefined, Array(9)).map(Boolean); // init an array with length 9 with false as default values
 
@@ -124,7 +118,7 @@ export class Tile<G extends IGroup, N extends INote> extends BehaviorSubject<num
     // this.subscriber.next(this);
   }
 
-  /** 
+  /**
    * Checks if the tile has the same value as the other cell
    * @param other {Tile} The tile to compare with
    */
@@ -145,13 +139,5 @@ export class Tile<G extends IGroup, N extends INote> extends BehaviorSubject<num
     this.notes.forEach(x => x.toggleValue(false));
     // this._notes = this._notes.map(() => false);
     this.clearInvalidNotes();
-
-    this.next();
-  }
-
-  next(val?: number) {
-    // console.log("tile.next");
-    if (typeof val === "undefined") val = this.value;
-    super.next(val);
   }
 }

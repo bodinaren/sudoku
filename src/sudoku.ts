@@ -1,5 +1,9 @@
-import { Linq, List } from "btypescript";
-import { ITile, Tile, INote, Note, IGroup, Group, GameModes, Combination, Calculator } from "./";
+import { ITile, Tile } from "./tile";
+import { INote, Note } from "./note";
+import { IGroup, Group } from "./group";
+import { GameModes } from "./gameModes";
+import { Combination } from "./combination";
+import { Calculator } from "./calculator";
 
 export interface ISudoku {
   tiles: ITile[];
@@ -38,9 +42,19 @@ export class Sudoku<T extends ITile, N extends INote, G extends IGroup> {
   mode: GameModes;
 
   constructor(
-    private tileType: { new<N>(noteType: N, id: number, value: number, blocked?: boolean, group?: G): T },
-    private noteType: { new(num: number, value: boolean, isInvalid: boolean) },
-    private groupType: { new(id: number, value: number, tiles?: T[]): G }
+    private TILE_TYPE: {
+      new(type: new(num: number, value: boolean, isInvalid: boolean) => N,
+      id: number,
+      value: number,
+      blocked?: boolean,
+      group?: G): T
+    },
+    private NOTE_TYPE: {
+      new(num: number, value: boolean, isInvalid: boolean): N
+    },
+    private GROUP_TYPE: {
+      new(id: number, value: number, tiles?: T[]): G
+    }
   ) { }
 
   /**
@@ -68,7 +82,7 @@ export class Sudoku<T extends ITile, N extends INote, G extends IGroup> {
     if (arr.length != 81) throw "Invalid board size";
 
     arr.forEach((val, idx) => {
-      this.tiles.push(new this.tileType(this.noteType, idx, val || 0, !!val));
+      this.tiles.push(new this.TILE_TYPE(this.NOTE_TYPE, idx, val || 0, !!val));
     });
 
     this.updateInvalidNotes();
@@ -82,7 +96,7 @@ export class Sudoku<T extends ITile, N extends INote, G extends IGroup> {
     this.mode = GameModes.Killer;
 
     for (let i = 0; i < 81; i++) {
-      this.tiles.push(new this.tileType(this.noteType, i, 0, false));
+      this.tiles.push(new this.TILE_TYPE(this.NOTE_TYPE, i, 0, false));
     }
 
     groups.forEach((group, idx) => {
@@ -93,7 +107,7 @@ export class Sudoku<T extends ITile, N extends INote, G extends IGroup> {
         tiles.push(this.tiles[group[i]]);
       }
 
-      let g = new this.groupType(idx, value, tiles);
+      let g = new this.GROUP_TYPE(idx, value, tiles);
       g.combinations = Calculator.getPossibilities(g.value, g.tiles.length);
       this.groups.push(g);
 
@@ -110,7 +124,7 @@ export class Sudoku<T extends ITile, N extends INote, G extends IGroup> {
     return this.tiles[idx];
   }
 
-  /** 
+  /**
    * Set the value of a tile, if the same value was already set, it'll be unset (set to 0).
    * Triggers a check of invalid tiles and groups.
    * @param tile {ITile} The tile to set the value on.
@@ -133,7 +147,7 @@ export class Sudoku<T extends ITile, N extends INote, G extends IGroup> {
 
   /** Check if the Sudoku is finished (no empty and no invalid tiles). */
   isFinished(): boolean {
-    return Linq.all(this.tiles, x => !x.isEmpty() && !x.isInvalid);
+    return this.tiles.every(x => !x.isEmpty() && !x.isInvalid);
 
     // let isAllFilled = true;
 
@@ -150,7 +164,7 @@ export class Sudoku<T extends ITile, N extends INote, G extends IGroup> {
 
   /**
    * Get all the tiles that are in the same region (the current tile is excluded).
-   * @param tile {ITile} The tile whose region we wanna get. 
+   * @param tile {ITile} The tile whose region we wanna get.
    */
   getRegion(tile: ITile): T[] {
     let rs = [],
@@ -158,16 +172,12 @@ export class Sudoku<T extends ITile, N extends INote, G extends IGroup> {
 
     for (let row = 0; row < 3; row++) {
       for (let col = 0; col < 3; col++) {
-        rs.push(this.tiles[start + col + row * 9]);
+        let t = this.tiles[start + col + row * 9];
+        if (t !== tile) rs.push(t);
       }
     }
 
-    List.removeAll(rs, x => x.id === tile.id); // remove self
-
     return rs;
-
-    // Simplier, but probably less performant. Does that matter tho with only 81 items?
-    // return Linq.filter(this.tiles, x => x.region == tile.region && x.id !== tile.id);
   }
 
   /** Check if the tiles are in the same row or the same column. */
@@ -177,32 +187,30 @@ export class Sudoku<T extends ITile, N extends INote, G extends IGroup> {
     return (tile1.column == tile2.column || tile1.row == tile2.row);
   }
 
-  /** 
+  /**
    * Get all the tiles that are in the same row or the same column (the current tile excluded).
-   * @param tile {ITile} The tile whose row and column we wanna get. 
+   * @param tile {ITile} The tile whose row and column we wanna get.
    */
   getCross(tile: ITile): T[] {
     let rs = [];
 
     for (let i = 0; i < 9; i++) {
-      rs.push(this.tiles[i * 9 + tile.column]);
-      rs.push(this.tiles[tile.row * 9 + i]);
+      let tc = this.tiles[i * 9 + tile.column];
+      let tr = this.tiles[tile.row * 9 + i];
+
+      if (tc !== tile) rs.push(tc);
+      if (tr !== tile) rs.push(tr);
     }
 
-    List.removeAll(rs, x => x.id === tile.id); // remove self
-
     return rs;
-
-    // Simplier, but probably less performant. Does that matter tho with only 81 items?
-    // return Linq.filter(this.tiles, x => x.id !== tile.id && (x.col === tile.col || x.row === tile.row));
   }
 
   /**
    * Gets all the tiles with a certain value.
-   * @param num {number} The value to get. 
+   * @param num {number} The value to get.
    */
   getTilesWithValue(num: number): T[] {
-    return Linq.filter(this.tiles, x => x.value === num);
+    return this.tiles.filter(x => x.value === num);
   }
 
   /** Check if two tiles are invalid */
@@ -262,7 +270,7 @@ export class Sudoku<T extends ITile, N extends INote, G extends IGroup> {
 
   /**
    * Updates all the groups that are invalid based on the values of the tiles in that group.
-   * It'll only be set as invalid if `Group.sum` is greater than `Group.value` or if all tiles has a value and `Group.sum` does not equal `Group.value`.  
+   * It'll only be set as invalid if `Group.sum` is greater than `Group.value` or if all tiles has a value and `Group.sum` does not equal `Group.value`.
    */
   updateInvalidGroups(): void {
     if (!this.isKillerMode()) return;
@@ -272,7 +280,7 @@ export class Sudoku<T extends ITile, N extends INote, G extends IGroup> {
 
       if (g.sum > g.value) {
         g.isInvalid = true;
-      } else if (Linq.all(g.tiles, x => x.value > 0) && g.sum !== g.value) {
+      } else if (g.tiles.every(x => x.value > 0) && g.sum !== g.value) {
         g.isInvalid = true;
       }
     });
@@ -287,10 +295,9 @@ export class Sudoku<T extends ITile, N extends INote, G extends IGroup> {
 /**
  * This class simplify the usage of Sudoku, using the default Tile, Note and Group.
  */
-export class DefaultSudoku extends Sudoku<Tile<IGroup, Note>, Note, Group<ITile>> {
+export class DefaultSudoku extends Sudoku<Tile<INote, IGroup>, Note, Group<ITile>> {
 
   constructor() {
     super(Tile, Note, Group);
   }
-
 }
