@@ -7,9 +7,6 @@
   ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "typescript": {
-    "main": "./src/index.ts"
-  },
   "scripts": {
     "test": "jest",
     "test.watch": "jest --watch",
